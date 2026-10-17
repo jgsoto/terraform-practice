@@ -23,12 +23,29 @@ resource "aws_instance" "nginx-server" {
   key_name               = aws_key_pair.nginx-server-ssh.key_name
   vpc_security_group_ids = aws_security_group.nginx-server-sg.id
 
+  #etiquetas para identificar la instancia#
+  tags = {
+    Name        = "nginx-server"
+    Environment = "practice"
+    Owner       = "jgsoto"
+    Team        = "UCE"
+    Project     = "terraform-practice"
+  }
+
 }
 
 #crear clave SSH para la instancia#
 resource "aws_key_pair" "nginx-server-ssh" {
   key_name   = "nginx-server-ssh"
   public_key = file("nginx-server-key.pub")
+
+  tags = {
+    Name        = "nginx-server-ssh"
+    Environment = "practice"
+    Owner       = "jgsoto"
+    Team        = "UCE"
+    Project     = "terraform-practice"
+  }
 }
 
 #security group: para abrir los puertos necesarios de la instancia#
@@ -57,4 +74,11 @@ resource "aws_scurity_group" "nginx-server-sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  tags = {
+    Name        = "nginx-server-sg"
+    Environment = "practice"
+    Owner       = "jgsoto"
+    Team        = "UCE"
+    Project     = "terraform-practice"
+  }
 }
