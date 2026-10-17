@@ -6,7 +6,7 @@ provider "aws" {
 #resource: recurso a crear (instancia, bucket, etc)#
 resource "aws_instance" "nginx-server" {
   #image: imagen a utilizar para la instancia#
-  ami           = "ami-0c02fb56b23889567"
+  ami = "ami-0c02fb56b23889567"
   #tipo de instancia#
   instance_type = "t3.micro"
 
@@ -20,12 +20,41 @@ resource "aws_instance" "nginx-server" {
                 EOF 
 
   #asignar clave SSH a la instancia#
-  key_name = aws_key_pair.nginx-server-ssh.key_name
+  key_name               = aws_key_pair.nginx-server-ssh.key_name
+  vpc_security_group_ids = aws_security_group.nginx-server-sg.id
 
 }
 
 #crear clave SSH para la instancia#
-resource "aws_key_pair" "nginx-server-ssh"{
-    key_name = "nginx-server-ssh"
-    public_key = file("nginx-server-key.pub")
+resource "aws_key_pair" "nginx-server-ssh" {
+  key_name   = "nginx-server-ssh"
+  public_key = file("nginx-server-key.pub")
+}
+
+#security group: para abrir los puertos necesarios de la instancia#
+resource "aws_scurity_group" "nginx-server-sg" {
+  name        = "nginx-server-sg"
+  description = "Security group for Nginx server"
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
 }
