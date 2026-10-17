@@ -1,3 +1,13 @@
+variable "ami_id"{
+    description = "ID de la imagen a utilizar para la instancia"
+    default = "ami-xxxxxxxx"
+}
+
+variable "instance_type" {
+    description = "tipo de instancia a utilizar"
+    default = "t3.micro"
+}
+
 #provider: proveedor de servicio (aws, azure, google, etc)#
 provider "aws" {
   region = "us-east-1"
@@ -6,9 +16,9 @@ provider "aws" {
 #resource: recurso a crear (instancia, bucket, etc)#
 resource "aws_instance" "nginx-server" {
   #image: imagen a utilizar para la instancia#
-  ami = "ami-0c02fb56b23889567"
+  ami = var.ami_id
   #tipo de instancia#
-  instance_type = "t3.micro"
+  instance_type = var.instance_type
 
   #comando que se ejecuta al crear la instancia#
   user_data = <<-EOF
