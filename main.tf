@@ -1,3 +1,13 @@
+#Configuración para guardar el archivo tfstate#
+terraform{
+    backend "s3" {
+        bucket = "terraform-practice"
+        key    = "terraform.tfstate"
+        region = "us-east-1"
+    }
+}
+
+#si se necesitan varias instancias con la misma configuracion se puede crear un modulo y llamarlo varias veces#
 module "nginx_server_module" {
   source = "./nginx_server_module"
 
